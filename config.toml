@@ -1,0 +1,6 @@
+[[applications]]
+key="app"
+chain="bsc"
+contractAddress="0x55d398326f99059ff775485246999027b3197955"
+decimal=18
+
