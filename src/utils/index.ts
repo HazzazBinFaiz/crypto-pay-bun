@@ -1,3 +1,5 @@
+import type { UUID } from 'node:crypto';
+
 export function lerp(points: [number, number][], x: number): number {
     const lastPointIndex = points.length - 1;
   
@@ -58,4 +60,27 @@ export function getNextMS(age: number)
     ];
 
     return lerp(points, age);
+}
+
+export function uuidTopathable(uuid: UUID)
+{
+  const [s_8_char, s_4_char, s_4_char_2, s_4_char_3, s_12_char] = uuid.split('-');
+  return [
+    parseInt((BigInt('0x'+s_8_char) & BigInt('0x7FFFFFFF')).toString(10)),
+    parseInt('0x'+s_4_char),
+    parseInt('0x'+s_4_char_2),
+    parseInt('0x'+s_4_char_3),
+    parseInt('0x'+s_12_char.slice(0, 6)),
+    parseInt('0x'+s_12_char.slice(6)),
+  ]
+}
+
+export function pathableToPath(segments: number[])
+{
+  return `m/44'/60'/${segments.map((n, i) => i === 0 ? n+'\'' : n.toString()).join('/')}`.toString() as `m/44'/60'/${string}`;
+}
+
+export function uuidToPath(uuid: UUID)
+{
+  return pathableToPath(uuidTopathable(uuid));
 }

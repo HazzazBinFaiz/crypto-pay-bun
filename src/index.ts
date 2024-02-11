@@ -1,12 +1,12 @@
 import * as chains from "viem/chains";
 import config from './config.toml';
 import { debounce } from 'lodash';
-import QueueManager from "./QueueManager";
+import QueueManager from "../QueueManager";
 import { dayToMS, getNextMS, minuteToMS, secondToMS } from "./utils";
 
 const chain = chains.bsc;
 
-const transactions : Transaction[]= [
+const transactions : Payment[]= [
     { address: '0x00078dbd620934e6DB168E615EB75cCFA3784528', amount: 100, created_at: new Date().getTime(), age: 0 },
     { address: '0x36696169C63e42cd08ce11f5deeBbCeBae652050', amount: 100, created_at: new Date().getTime(), age: 0 },
     { address: '0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE', amount: 100, created_at: new Date().getTime(), age: 0 },
@@ -39,24 +39,28 @@ const MAX_QUEUE_TIMEOUT = 1000;
 
 Bun.serve({
   port: 9000,
-  fetch(req) {
+  async fetch(req) {
     const url = new URL(req.url);
-    if (req.method === "POST" && url.pathname === "/post-path") {
-      return new Response("Handled POST request");
+    if (req.method === "POST" && url.pathname === "/payment") {
+      try {
+        console.log(req)
+        console.log(await req.json())
+      } catch (_) {
+        return new Response(null, { status: 400 });
+      }
     }
 
     if (req.method === "GET") {
       try {
         const path = new URL(req.url).pathname;
         const file = Bun.file(`./public${path}`);
-        if (file.size !== 0) {
-          return new Response(file);
-        }
+        if (!await file.exists()) throw Error();
+        if (file.size !== 0) return new Response(file);
       } catch (error) {
-        return new Response("Not Found", { status: 404 });
+        return new Response(null, { status: 404 });
       }
     }
 
-    return new Response("Not Found", { status: 404 });
+    return new Response(null, { status: 404 });
   }
 });

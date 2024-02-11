@@ -1,6 +1,9 @@
 [[applications]]
+id=1
 key="app"
-chain="bsc"
+chainId=56
+secret="sd8fsd7fsdfsd"
 contractAddress="0x55d398326f99059ff775485246999027b3197955"
 decimal=18
+mnemonics="legal winner thank year wave sausage worth useful legal winner thank yellow"
 
